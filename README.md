@@ -36,6 +36,10 @@ Enter a password at the prompt. Remember this login, as you will need it to acce
 # etcKeeper 
 Added etcKeeper - autocommit on exit to /etc git local repository
 
+# You need to configure filebeat
+[Filebeat] (https://www.digitalocean.com/community/tutorials/how-to-install-elasticsearch-logstash-and-kibana-elk-stack-on-ubuntu-14-04)
+
+
 #Origin
 [Docker Hub] (https://registry.hub.docker.com/u/cristo/symfony2/)
 

@@ -95,8 +95,5 @@ RUN apt-get update
 RUN apt-get install filebeat -y
 RUN service filebeat restart
 
-#You need to configure filebeat
-#https://www.digitalocean.com/community/tutorials/how-to-install-elasticsearch-logstash-and-kibana-elk-stack-on-ubuntu-14-04
-
 #open ports
 EXPOSE 80 22
