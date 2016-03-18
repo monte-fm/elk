@@ -1,6 +1,6 @@
 #Create container
 ```
-docker run -i -t -d --name=elk -h=elk -p 4001:80 -p 4002:22 cristo/elk /bin/bash
+docker run -i -t -d --name=elk -h=elk -p 4001:80 -p 4002:22 -p 4003:9200 cristo/elk /bin/bash
 ```
 
 #SSH

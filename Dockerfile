@@ -44,13 +44,12 @@ RUN /root/etckeeper.sh
 
 
 #Install Java 8
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys EEA14886
 RUN add-apt-repository -y ppa:webupd8team/java
+RUN apt-get update
 # Accept license non-iteractive
 RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys EEA14886
-RUN apt-get update
 RUN apt-get install -y oracle-java8-installer
-# Make sure Java 8 becomes default java
 RUN apt-get install -y oracle-java8-set-default
 
 
@@ -60,6 +59,7 @@ RUN echo "deb http://packages.elastic.co/elasticsearch/2.x/debian stable main" |
 RUN apt-get update
 RUN apt-get -y install elasticsearch
 RUN echo "network.host: localhost" | sudo tee -a /etc/elasticsearch/elasticsearch.yml
+RUN service elasticsearch restart
 
 #Install Kibana
 RUN echo "deb http://packages.elastic.co/kibana/4.4/debian stable main" | sudo tee -a /etc/apt/sources.list.d/kibana-4.4.x.list
@@ -75,11 +75,6 @@ RUN echo 'deb http://packages.elastic.co/logstash/2.2/debian stable main' | sudo
 RUN apt-get update
 RUN apt-get install logstash -y
 
-#Load Filebeat Index Template in Elasticsearch
-RUN cd ~
-RUN curl -O https://gist.githubusercontent.com/thisismitch/3429023e8438cc25b86c/raw/d8c479e2a1adcea8b1fe86570e42abab0f10f364/filebeat-index-template.json
-RUN curl -XPUT 'http://localhost:9200/_template/filebeat?pretty' -d@filebeat-index-template.json
-
 #Install Filebeat Package
 RUN echo "deb https://packages.elastic.co/beats/apt stable main" |  sudo tee -a /etc/apt/sources.list.d/beats.list
 RUN wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
@@ -87,12 +82,21 @@ RUN apt-get update
 RUN apt-get install filebeat -y
 RUN service filebeat restart
 
+RUN echo "ELASTICA============================"
+RUN service elasticsearch status
+RUN echo "ELASTICA-----------------"
+
 #Load Kibana Dashboards
 RUN cd ~
 RUN curl -L -O https://download.elastic.co/beats/dashboards/beats-dashboards-1.1.0.zip
 RUN unzip beats-dashboards-*.zip
 RUN cd beats-dashboards-* && ./load.sh
+
+#Load Filebeat Index Template in Elasticsearch
+RUN cd ~
+RUN curl -O https://gist.githubusercontent.com/thisismitch/3429023e8438cc25b86c/raw/d8c479e2a1adcea8b1fe86570e42abab0f10f364/filebeat-index-template.json
+RUN curl -XPUT 'http://localhost:9200/_template/filebeat?pretty' -d@filebeat-index-template.json
 RUN service elasticsearch restart
 
 #open ports
-EXPOSE 80 22
+EXPOSE 80 22 9200
