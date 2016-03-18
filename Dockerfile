@@ -75,13 +75,6 @@ RUN echo 'deb http://packages.elastic.co/logstash/2.2/debian stable main' | sudo
 RUN apt-get update
 RUN apt-get install logstash -y
 
-#Load Kibana Dashboards
-RUN cd ~
-RUN curl -L -O https://download.elastic.co/beats/dashboards/beats-dashboards-1.1.0.zip
-RUN unzip beats-dashboards-*.zip
-RUN cd beats-dashboards-* && ./load.sh
-RUN service elasticsearch restart
-
 #Load Filebeat Index Template in Elasticsearch
 RUN cd ~
 RUN curl -O https://gist.githubusercontent.com/thisismitch/3429023e8438cc25b86c/raw/d8c479e2a1adcea8b1fe86570e42abab0f10f364/filebeat-index-template.json
@@ -93,6 +86,13 @@ RUN wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key 
 RUN apt-get update
 RUN apt-get install filebeat -y
 RUN service filebeat restart
+
+#Load Kibana Dashboards
+RUN cd ~
+RUN curl -L -O https://download.elastic.co/beats/dashboards/beats-dashboards-1.1.0.zip
+RUN unzip beats-dashboards-*.zip
+RUN cd beats-dashboards-* && ./load.sh
+RUN service elasticsearch restart
 
 #open ports
 EXPOSE 80 22
