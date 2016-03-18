@@ -70,12 +70,10 @@ RUN service kibana start
 RUN service nginx restart
 
 #Install Logstash
+RUN wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 RUN echo 'deb http://packages.elastic.co/logstash/2.2/debian stable main' | sudo tee /etc/apt/sources.list.d/logstash-2.2.x.list
 RUN apt-get update
 RUN apt-get install logstash -y
-
-RUN service logstash restart
-
 
 #Load Kibana Dashboards
 RUN cd ~
