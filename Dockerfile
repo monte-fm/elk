@@ -33,7 +33,7 @@ RUN chmod +x /root/autostart.sh
 COPY configs/bash.bashrc /etc/bash.bashrc
 
 #Add colorful command line
-RUN echo "force_color_prompt=yes" >> .bashrc
+RUN echo "force_color_prompt=yes" >> ~/.bashrc
 RUN echo "export PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u\[\033[01;33m\]@\[\033[01;36m\]\h \[\033[01;33m\]\w \[\033[01;35m\]\$ \[\033[00m\]'" >> .bashrc
 
 #etcKeeper
@@ -51,7 +51,9 @@ RUN apt-get update
 RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
 RUN apt-get install -y oracle-java8-installer
 RUN apt-get install -y oracle-java8-set-default
-
+RUN echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" | sudo tee -a /etc/environment
+RUN export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+RUN source /etc/environment
 
 #Install Elasticsearch
 RUN wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
