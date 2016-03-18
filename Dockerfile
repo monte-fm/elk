@@ -5,7 +5,7 @@ MAINTAINER Olexander Kutsenko <olexander.kutsenko@gmail.com>
 RUN apt-get update -y && apt-get upgrade -y
 RUN apt-get install -y software-properties-common python-software-properties
 RUN apt-get install -y git git-core vim nano mc nginx screen curl unzip zip wget
-RUN apt-get install -y apache2-utils
+RUN apt-get install -y apache2-utils tmux
 
 #Install PHP
 RUN apt-get install -y wget php5 php5-fpm php5-cli php5-common php5-intl
@@ -59,6 +59,7 @@ RUN echo "deb http://packages.elastic.co/elasticsearch/2.x/debian stable main" |
 RUN apt-get update
 RUN apt-get -y install elasticsearch
 RUN echo "network.host: localhost" >> /etc/elasticsearch/elasticsearch.yml
+RUN service elasticsearch start
 RUN service elasticsearch restart
 
 #Install Kibana
