@@ -53,7 +53,7 @@ RUN apt-get install -y oracle-java8-installer
 RUN apt-get install -y oracle-java8-set-default
 RUN echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" | sudo tee -a /etc/environment
 RUN export JAVA_HOME=/usr/lib/jvm/java-8-oracle
-RUN source /etc/environment
+
 
 #Install Elasticsearch
 RUN wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
