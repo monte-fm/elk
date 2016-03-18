@@ -72,14 +72,12 @@ RUN service kibana start
 RUN service nginx restart
 
 #Install Logstash
-RUN wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 RUN echo 'deb http://packages.elastic.co/logstash/2.2/debian stable main' | sudo tee /etc/apt/sources.list.d/logstash-2.2.x.list
 RUN apt-get update
 RUN apt-get install logstash -y
 
 #Install Filebeat Package
 RUN echo "deb https://packages.elastic.co/beats/apt stable main" |  sudo tee -a /etc/apt/sources.list.d/beats.list
-RUN wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 RUN apt-get update
 RUN apt-get install filebeat -y
 RUN service filebeat restart
