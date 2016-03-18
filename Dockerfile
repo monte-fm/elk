@@ -25,7 +25,7 @@ RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/ss
 # SSH login fix. Otherwise user is kicked off after login
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 ENV NOTVISIBLE "in users profile"
-RUN echo "export VISIBLE=now" >> /etc/profile
+RUN echo "export VISIBLE=now" >> sudo tee -a /etc/profile
 
 #configs bash start
 COPY configs/autostart.sh /root/autostart.sh
@@ -59,9 +59,7 @@ RUN wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key 
 RUN echo "deb http://packages.elastic.co/elasticsearch/2.x/debian stable main" | sudo tee -a /etc/apt/sources.list.d/elasticsearch-2.x.list
 RUN apt-get update
 RUN apt-get -y install elasticsearch
-RUN echo "network.host: localhost" >> /etc/elasticsearch/elasticsearch.yml
-RUN service elasticsearch start
-RUN service elasticsearch restart
+RUN echo "network.host: localhost" | sudo tee -a /etc/elasticsearch/elasticsearch.yml
 
 #Install Kibana
 RUN echo "deb http://packages.elastic.co/kibana/4.4/debian stable main" | sudo tee -a /etc/apt/sources.list.d/kibana-4.4.x.list
@@ -82,6 +80,7 @@ RUN cd ~
 RUN curl -L -O https://download.elastic.co/beats/dashboards/beats-dashboards-1.1.0.zip
 RUN unzip beats-dashboards-*.zip
 RUN cd beats-dashboards-* && ./load.sh
+RUN service elasticsearch restart
 
 #Load Filebeat Index Template in Elasticsearch
 RUN cd ~
