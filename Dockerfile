@@ -6,7 +6,7 @@ RUN export LC_ALL=C
 RUN apt-get update -y && apt-get upgrade -y
 RUN apt-get install -y software-properties-common python-software-properties
 RUN apt-get install -y git git-core vim nano mc nginx screen curl unzip zip wget
-RUN apt-get install -y apache2-utils tmux
+RUN apt-get install -y apache2-utils tmux apt-transport-https
 
 #Install PHP
 RUN apt-get install -y wget php5 php5-fpm php5-cli php5-common php5-intl
@@ -77,7 +77,7 @@ RUN apt-get update
 RUN apt-get install logstash -y
 
 #Install Filebeat Package
-RUN echo "deb https://packages.elastic.co/beats/apt stable main" |  sudo tee -a /etc/apt/sources.list.d/beats.list
+RUN echo 'deb https://packages.elastic.co/beats/apt stable main' |  sudo tee -a /etc/apt/sources.list.d/beats.list
 RUN apt-get update
 RUN apt-get install filebeat -y
 RUN service filebeat restart
