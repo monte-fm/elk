@@ -93,10 +93,10 @@ RUN apt-get install filebeat -y
 #RUN cd beats-dashboards-* && ./load.sh
 
 #Load Filebeat Index Template in Elasticsearch
-RUN cd ~
-RUN curl -O https://gist.githubusercontent.com/thisismitch/3429023e8438cc25b86c/raw/d8c479e2a1adcea8b1fe86570e42abab0f10f364/filebeat-index-template.json
-RUN curl -XPUT 'http://localhost:9200/_template/filebeat?pretty' -d@filebeat-index-template.json
-RUN service elasticsearch restart
+#RUN cd ~
+#RUN curl -O https://gist.githubusercontent.com/thisismitch/3429023e8438cc25b86c/raw/d8c479e2a1adcea8b1fe86570e42abab0f10f364/filebeat-index-template.json
+#RUN curl -XPUT 'http://localhost:9200/_template/filebeat?pretty' -d@filebeat-index-template.json
+#RUN service elasticsearch restart
 
 #open ports
 EXPOSE 80 22 9200
