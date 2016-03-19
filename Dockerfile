@@ -82,15 +82,15 @@ RUN apt-get update
 RUN apt-get install filebeat -y
 RUN service filebeat restart
 
-RUN echo "ELASTICA============================"
-RUN service elasticsearch status
-RUN echo "ELASTICA-----------------"
+#RUN echo "ELASTICA============================"
+#RUN service elasticsearch status
+#RUN echo "ELASTICA-----------------"
 
 #Load Kibana Dashboards
-RUN cd ~
-RUN curl -L -O https://download.elastic.co/beats/dashboards/beats-dashboards-1.1.0.zip
-RUN unzip beats-dashboards-*.zip
-RUN cd beats-dashboards-* && ./load.sh
+#RUN cd ~
+#RUN curl -L -O https://download.elastic.co/beats/dashboards/beats-dashboards-1.1.0.zip
+#RUN unzip beats-dashboards-*.zip
+#RUN cd beats-dashboards-* && ./load.sh
 
 #Load Filebeat Index Template in Elasticsearch
 RUN cd ~
