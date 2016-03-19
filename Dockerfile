@@ -80,7 +80,7 @@ RUN apt-get install logstash -y
 RUN echo 'deb https://packages.elastic.co/beats/apt stable main' |  sudo tee -a /etc/apt/sources.list.d/beats.list
 RUN apt-get update
 RUN apt-get install filebeat -y
-RUN service filebeat restart
+#RUN service filebeat restart
 
 #RUN echo "ELASTICA============================"
 #RUN service elasticsearch status
