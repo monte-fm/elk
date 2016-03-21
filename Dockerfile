@@ -85,7 +85,7 @@ RUN openssl req -config /etc/ssl/openssl.cnf -x509 -days 3650 -batch -nodes -new
 RUN echo 'deb http://packages.elastic.co/logstash/2.2/debian stable main' | sudo tee /etc/apt/sources.list.d/logstash-2.2.x.list
 RUN apt-get update
 RUN apt-get install logstash -y
-COPY configs/files/logstash/* /etc/logstash/conf.d
+COPY configs/files/logstash/* /etc/logstash/conf.d/
 RUN service logstash configtest
 RUN service logstash start
 
