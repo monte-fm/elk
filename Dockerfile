@@ -75,6 +75,7 @@ RUN service nginx restart
 
 #Generate SSL Certificates
 RUN mkdir -p /etc/pki/tls
+RUN mkdir -p /etc/pki/tls/private/
 RUN mkdir -p /etc/pki/tls/certs
 RUN sed -i 's/# Extensions for a typical CA/subjectAltName = IP: 127.0.0.1/g' /etc/ssl/openssl.cnf
 RUN openssl req -config /etc/ssl/openssl.cnf -x509 -days 3650 -batch -nodes -newkey rsa:2048 -keyout /etc/pki/tls/private/logstash-forwarder.key -out /etc/pki/tls/certs/logstash-forwarder.crt
