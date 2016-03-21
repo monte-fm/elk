@@ -27,11 +27,11 @@ server {
 ```
 
 # Nginx kibana user creation
-Use htpasswd to create an admin user, called "kibanaadmin" (you should use another name), that can access the Kibana web interface:
+Use htpasswd to create an 'admin' user with password 'admin', (you should use another name), that can access the Kibana web interface:
 ```
-sudo htpasswd -c /etc/nginx/htpasswd.users kibanaadmin
+sudo htpasswd -c -b /etc/nginx/htpasswd.users admin admin
 ```
-Enter a password at the prompt. Remember this login, as you will need it to access the Kibana web interface.
+Remember this login, as you will need it to access the Kibana web interface.
 
 # etcKeeper 
 Added etcKeeper - autocommit on exit to /etc git local repository
