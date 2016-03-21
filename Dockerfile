@@ -39,7 +39,7 @@ RUN echo "export PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u\[\033[
 #etcKeeper
 RUN mkdir -p /root/etckeeper
 COPY configs/etckeeper.sh /root
-COPY configs/files/etckeeper-hook.sh /root/etckeeper
+COPY configs/etckeeper-hook.sh /root/etckeeper
 RUN /root/etckeeper.sh
 
 
@@ -85,7 +85,7 @@ RUN openssl req -config /etc/ssl/openssl.cnf -x509 -days 3650 -batch -nodes -new
 RUN echo 'deb http://packages.elastic.co/logstash/2.2/debian stable main' | sudo tee /etc/apt/sources.list.d/logstash-2.2.x.list
 RUN apt-get update
 RUN apt-get install logstash -y
-COPY configs/files/logstash/* /etc/logstash/conf.d/
+COPY configs/logstash/* /etc/logstash/conf.d/
 RUN service logstash configtest
 RUN service logstash start
 
