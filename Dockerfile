@@ -69,6 +69,7 @@ RUN apt-get update
 RUN apt-get -y install kibana
 RUN sed -i 's/0.0.0.0/localhost/g' /opt/kibana/config/kibana.yml
 RUN service kibana start
+RUN htpasswd -b -c /etc/nginx/htpasswd.users admin admin
 RUN service nginx restart
 
 #Install Logstash
