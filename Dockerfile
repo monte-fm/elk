@@ -61,6 +61,7 @@ RUN echo "deb http://packages.elastic.co/elasticsearch/2.x/debian stable main" |
 RUN apt-get update
 RUN apt-get -y install elasticsearch
 RUN echo "network.host: localhost" | sudo tee -a /etc/elasticsearch/elasticsearch.yml
+RUN echo "MAX_MAP_COUNT=" | sudo tee -a /etc/default/elasticsearch
 RUN service elasticsearch restart
 
 #Install Kibana
