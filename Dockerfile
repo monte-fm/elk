@@ -72,32 +72,38 @@ RUN service kibana start
 RUN htpasswd -b -c /etc/nginx/htpasswd.users admin admin
 RUN service nginx restart
 
+#Generate SSL Certificates
+RUN mkdir -p /etc/pki/tls/certs
+RUN sed -i 's/# Extensions for a typical CA/subjectAltName = IP: 127.0.0.1/g' /etc/ssl/openssl.cnf
+RUN cd /etc/pki/tls; sudo openssl req -config /etc/ssl/openssl.cnf -x509 -days 3650 -batch -nodes -newkey rsa:2048 -keyout private/logstash-forwarder.key -out certs/logstash-forwarder.crt
+
+
 #Install Logstash
 RUN echo 'deb http://packages.elastic.co/logstash/2.2/debian stable main' | sudo tee /etc/apt/sources.list.d/logstash-2.2.x.list
 RUN apt-get update
 RUN apt-get install logstash -y
+COPY configs/files/logstash/* /etc/logstash/conf.d
+RUN service logstash configtest
+RUN service logstash start
 
 #Install Filebeat Package
 RUN echo 'deb https://packages.elastic.co/beats/apt stable main' |  sudo tee -a /etc/apt/sources.list.d/beats.list
 RUN apt-get update
 RUN apt-get install filebeat -y
-#RUN service filebeat restart
-
-#RUN echo "ELASTICA============================"
-#RUN service elasticsearch status
-#RUN echo "ELASTICA-----------------"
 
 #Load Kibana Dashboards
-#RUN cd ~
-#RUN curl -L -O https://download.elastic.co/beats/dashboards/beats-dashboards-1.1.0.zip
-#RUN unzip beats-dashboards-*.zip
-#RUN cd beats-dashboards-* && ./load.sh
+RUN cd ~
+RUN curl -L -O https://download.elastic.co/beats/dashboards/beats-dashboards-1.1.0.zip
+RUN unzip beats-dashboards-*.zip
+RUN cd beats-dashboards-* && ./load.sh
 
 #Load Filebeat Index Template in Elasticsearch
-#RUN cd ~
-#RUN curl -O https://gist.githubusercontent.com/thisismitch/3429023e8438cc25b86c/raw/d8c479e2a1adcea8b1fe86570e42abab0f10f364/filebeat-index-template.json
-#RUN curl -XPUT 'http://localhost:9200/_template/filebeat?pretty' -d@filebeat-index-template.json
-#RUN service elasticsearch restart
+RUN cd ~
+RUN curl -O https://gist.githubusercontent.com/thisismitch/3429023e8438cc25b86c/raw/d8c479e2a1adcea8b1fe86570e42abab0f10f364/filebeat-index-template.json
+RUN curl -XPUT 'http://localhost:9200/_template/filebeat?pretty' -d@filebeat-index-template.json
+
+RUN service elasticsearch restart
+RUN service filebeat restart
 
 #open ports
 EXPOSE 80 22 9200
