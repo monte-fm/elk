@@ -5,7 +5,7 @@ docker run -i -t -d --name=elk -h=elk -p 4001:80 -p 4002:22 -p 4003:9200 cristo/
 
 #SSH
 ```
-ssh -p4022 root@localhost
+ssh -p4002 root@localhost
 password: root
 ```
 
@@ -21,7 +21,7 @@ server {
                                 proxy_set_header Host $host;
                                 proxy_set_header X-Real-IP $remote_addr;
                                 proxy_cache off;
-                                proxy_pass http://localhost:4080;
+                                proxy_pass http://localhost:4001;
                         }
 }
 ```
