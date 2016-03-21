@@ -94,16 +94,19 @@ RUN echo 'deb https://packages.elastic.co/beats/apt stable main' |  sudo tee -a 
 RUN apt-get update
 RUN apt-get install filebeat -y
 
-#Load Kibana Dashboards
-RUN cd ~
-RUN curl -L -O https://download.elastic.co/beats/dashboards/beats-dashboards-1.1.0.zip
-RUN unzip beats-dashboards-*.zip
-RUN cd beats-dashboards-* && ./load.sh
+
+RUN service elasticsearch start
 
 #Load Filebeat Index Template in Elasticsearch
 RUN cd ~
 RUN curl -O https://gist.githubusercontent.com/thisismitch/3429023e8438cc25b86c/raw/d8c479e2a1adcea8b1fe86570e42abab0f10f364/filebeat-index-template.json
 RUN curl -XPUT 'http://localhost:9200/_template/filebeat?pretty' -d@filebeat-index-template.json
+
+#Load Kibana Dashboards
+RUN cd ~
+RUN curl -L -O https://download.elastic.co/beats/dashboards/beats-dashboards-1.1.0.zip
+RUN unzip beats-dashboards-*.zip
+RUN cd beats-dashboards-* && ./load.sh
 
 RUN service elasticsearch restart
 RUN service filebeat restart
