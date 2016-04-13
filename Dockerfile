@@ -94,4 +94,4 @@ RUN service elasticsearch restart
 RUN service filebeat restart
 RUN service logstash restart
 #open ports
-EXPOSE 80 22 5044
+EXPOSE 80 22 5044 9200
