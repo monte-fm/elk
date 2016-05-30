@@ -1,11 +1,9 @@
 #!/bin/bash
+service logstash configtest
 service php5-fpm start
 service nginx start
 service ssh start
-service elasticsearch start
-service kibana start
-service logstash start
-service filebeat start
+service supervisor start
 
 #Load Filebeat Index Template in Elasticsearch
 cd ~
@@ -20,11 +18,10 @@ cd beats-dashboards-* && ./load.sh
 
 echo "
 #!/bin/bash
+service supervisor start
 service php5-fpm start
 service nginx start
 service ssh start
-service elasticsearch start
-service kibana start
-service logstash start
 service filebeat start
+service postfix start
 " > /root/autostart.sh

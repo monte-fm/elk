@@ -6,6 +6,20 @@ RUN apt-get update -y && apt-get upgrade -y
 RUN apt-get install -y software-properties-common python-software-properties
 RUN apt-get install -y git git-core vim nano mc nginx screen curl unzip zip wget
 RUN apt-get install -y apache2-utils tmux apt-transport-https
+RUN echo "postfix postfix/mailname string magento.hostname.com" | sudo debconf-set-selections
+RUN echo "postfix postfix/main_mailer_type string 'Magento E-commerce'" | sudo debconf-set-selections
+RUN apt-get install -y supervisor postfix
+
+#Install Java 8
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys EEA14886
+RUN add-apt-repository -y ppa:webupd8team/java
+RUN apt-get update
+# Accept license non-iteractive
+RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
+RUN apt-get install -y oracle-java8-installer
+RUN apt-get install -y oracle-java8-set-default
+RUN echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" | sudo tee -a /etc/environment
+RUN export JAVA_HOME=/usr/lib/jvm/java-8-oracle
 
 #Install PHP
 RUN apt-get install -y wget php5 php5-fpm php5-cli php5-common php5-intl
@@ -41,19 +55,6 @@ COPY configs/etckeeper.sh /root
 COPY configs/etckeeper-hook.sh /root/etckeeper
 RUN /root/etckeeper.sh
 
-
-#Install Java 8
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys EEA14886
-RUN add-apt-repository -y ppa:webupd8team/java
-RUN apt-get update
-# Accept license non-iteractive
-RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
-RUN apt-get install -y oracle-java8-installer
-RUN apt-get install -y oracle-java8-set-default
-RUN echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" | sudo tee -a /etc/environment
-RUN export JAVA_HOME=/usr/lib/jvm/java-8-oracle
-
-
 #Install Elasticsearch
 RUN wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 RUN echo "deb http://packages.elastic.co/elasticsearch/2.x/debian stable main" | sudo tee -a /etc/apt/sources.list.d/elasticsearch-2.x.list
@@ -88,12 +89,15 @@ RUN echo 'deb http://packages.elastic.co/logstash/2.2/debian stable main' | sudo
 RUN apt-get update
 RUN apt-get install logstash -y
 COPY configs/logstash/* /etc/logstash/conf.d/
-RUN service logstash configtest
-RUN service logstash start
-RUN service elasticsearch start
+COPY configs/supervisor/*.conf /etc/supervisor/conf.d/
 
-RUN service elasticsearch restart
-RUN service filebeat restart
-RUN service logstash restart
+#Instal ElasticAlert
+COPY configs/alerts.zip /opt/alerts.zip
+RUN unzip -d /opt/elastalert /opt/alerts.zip
+RUN rm /opt/alerts.zip
+RUN pip install --upgrade pip
+RUN pip install -r /opt/elastalert/requirements-dev.txt
+RUN pip install -r /opt/elastalert/requirements.txt
+
 #open ports
-EXPOSE 80 22 5044 9200
+EXPOSE 80 22 5044

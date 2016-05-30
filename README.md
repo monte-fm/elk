@@ -1,11 +1,11 @@
 #Create container
 ```
-docker run -i -t -d --name=elk -h=elk -p 4001:80 -p 4002:22 -p 5044:5044 cristo/elk /bin/bash
+docker run -i -t -d --name=elk -h=elk -p 5001:80 -p 5002:22 -p 5044:5044 cristo/elk /bin/bash
 ```
 
 #SSH
 ```
-ssh -p4002 root@localhost
+ssh -p5002 root@localhost
 password: root
 ```
 
@@ -21,7 +21,7 @@ server {
                                 proxy_set_header Host $host;
                                 proxy_set_header X-Real-IP $remote_addr;
                                 proxy_cache off;
-                                proxy_pass http://localhost:4001;
+                                proxy_pass http://localhost:5001;
                         }
 }
 ```
