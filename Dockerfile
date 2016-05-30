@@ -95,9 +95,6 @@ COPY configs/supervisor/*.conf /etc/supervisor/conf.d/
 COPY configs/alerts.zip /opt/alerts.zip
 RUN unzip -d /opt/elastalert /opt/alerts.zip
 RUN rm /opt/alerts.zip
-RUN pip install --upgrade pip
-RUN pip install -r /opt/elastalert/requirements-dev.txt
-RUN pip install -r /opt/elastalert/requirements.txt
 
 #open ports
 EXPOSE 80 22 5044

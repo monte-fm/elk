@@ -16,6 +16,10 @@ curl -L -O https://download.elastic.co/beats/dashboards/beats-dashboards-1.1.0.z
 unzip beats-dashboards-*.zip
 cd beats-dashboards-* && ./load.sh
 
+pip install --upgrade pip
+pip install -r /opt/elastalert/requirements-dev.txt
+pip install -r /opt/elastalert/requirements.txt
+
 echo "
 #!/bin/bash
 service supervisor start
