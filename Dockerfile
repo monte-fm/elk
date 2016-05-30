@@ -2,7 +2,6 @@ FROM      ubuntu
 MAINTAINER Olexander Kutsenko <olexander.kutsenko@gmail.com>
 
 #install
-RUN export LC_ALL=C
 RUN apt-get update -y && apt-get upgrade -y
 RUN apt-get install -y software-properties-common python-software-properties
 RUN apt-get install -y git git-core vim nano mc nginx screen curl unzip zip wget
@@ -80,6 +79,9 @@ RUN mkdir -p /etc/pki/tls/certs
 RUN sed -i 's/# Extensions for a typical CA/subjectAltName = IP: 127.0.0.1/g' /etc/ssl/openssl.cnf
 RUN openssl req -config /etc/ssl/openssl.cnf -x509 -days 3650 -batch -nodes -newkey rsa:2048 -keyout /etc/pki/tls/private/logstash-forwarder.key -out /etc/pki/tls/certs/logstash-forwarder.crt
 
+#Install locale
+RUN locale-gen en_US.UTF-8
+RUN dpkg-reconfigure locales
 
 #Install Logstash
 RUN echo 'deb http://packages.elastic.co/logstash/2.2/debian stable main' | sudo tee /etc/apt/sources.list.d/logstash-2.2.x.list
