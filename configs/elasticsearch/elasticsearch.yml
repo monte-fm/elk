@@ -1,0 +1,17 @@
+network.host: 0.0.0.0
+cluster.name: elk
+node.name: "elk"
+
+watcher.actions.email.service.account:
+    work:
+        profile: gmail
+        email_defaults:
+            from: 'ELK PROJECT <elk.project@gmail.com>'
+            bcc: elk@project.com
+        smtp:
+            auth: true
+            starttls.enable: true
+            host: smtp.gmail.com
+            port: 587
+            user: elk.project
+            password: elk.proejct1
