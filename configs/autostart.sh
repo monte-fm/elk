@@ -26,6 +26,5 @@ service supervisor start
 service php5-fpm start
 service nginx start
 service ssh start
-service filebeat start
 service postfix start
 " > /root/autostart.sh
