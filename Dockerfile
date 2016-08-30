@@ -4,7 +4,7 @@ MAINTAINER Olexander Kutsenko <olexander.kutsenko@gmail.com>
 #install
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y software-properties-common python-software-properties
-RUN apt-get install -y python-dev
+RUN apt-get install -y python-dev python-setuptools
 RUN easy_install pip
 RUN apt-get install -y git git-core vim nano mc nginx screen curl unzip zip wget
 RUN apt-get install -y apache2-utils tmux apt-transport-https
