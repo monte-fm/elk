@@ -3,9 +3,9 @@
 docker run -i -t -d --name=elk -h=elk -p 5001:80 -p 5044:5044 cristo/elk /bin/bash
 ```
 
-# SSH
+# SSH (if you open port when create container)
 ```
-ssh -p5002 root@localhost
+ssh -port root@localhost
 password: root
 ```
 
