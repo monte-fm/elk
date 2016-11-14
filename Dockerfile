@@ -37,7 +37,7 @@ RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/ss
 # SSH login fix. Otherwise user is kicked off after login
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 ENV NOTVISIBLE "in users profile"
-RUN echo "export VISIBLE=now" >> sudo tee -a /etc/profile
+RUN echo "export VISIBLE=now" >> tee -a /etc/profile
 
 # Configs bash start
 COPY configs/autostart.sh /root/autostart.sh
@@ -73,8 +73,9 @@ RUN sed -i 's/# Extensions for a typical CA/subjectAltName = IP: 127.0.0.1/g' /e
 RUN openssl req -config /etc/ssl/openssl.cnf -x509 -days 3650 -batch -nodes -newkey rsa:2048 -keyout /etc/pki/tls/private/logstash-forwarder.key -out /etc/pki/tls/certs/logstash-forwarder.crt
 
 # Install Logstash
-RUN wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
-RUN echo 'deb http://packages.elastic.co/logstash/2.2/debian stable main' | sudo tee /etc/apt/sources.list.d/logstash-2.2.x.list
+RUN rm /etc/apt/sources.list.d/*
+RUN wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | apt-key add -
+RUN echo 'deb http://packages.elastic.co/logstash/2.2/debian stable main' | tee /etc/apt/sources.list.d/logstash-2.2.x.list
 RUN apt-get update
 RUN apt-get install logstash -y
 COPY configs/logstash/* /etc/logstash/conf.d/
@@ -88,6 +89,8 @@ RUN rm /opt/alerts.zip
 COPY configs/etckeeper.sh /root
 COPY configs/etckeeper-hook.sh /root/etckeeper
 RUN /root/etckeeper.sh
+RUN rm /etc/apt/sources.list.d/*
+RUN apt-get update
 
 # Open ports
 EXPOSE 80 5044
