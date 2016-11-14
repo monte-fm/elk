@@ -82,14 +82,6 @@ RUN apt-get install logstash -y
 COPY configs/logstash/* /etc/logstash/conf.d/
 COPY configs/supervisor/*.conf /etc/supervisor/conf.d/
 
-
-
-
-
-
-
-
-
 # Instal ElasticAlert
 COPY configs/alerts.zip /opt/alerts.zip
 RUN unzip -d /opt/elastalert /opt/alerts.zip
