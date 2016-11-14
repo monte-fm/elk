@@ -44,12 +44,6 @@ RUN chmod +x /root/autostart.sh
 RUN echo "force_color_prompt=yes" >> ~/.bashrc
 RUN echo "export PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u\[\033[01;33m\]@\[\033[01;36m\]\h \[\033[01;33m\]\w \[\033[01;35m\]\$ \[\033[00m\]'" >> .bashrc
 
-#etcKeeper
-COPY configs/etckeeper.sh /root
-COPY configs/etckeeper-hook.sh /root/etckeeper
-RUN mkdir -p /root/etckeeper
-RUN /root/etckeeper.sh
-
 #Install Elasticsearch
 RUN wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add -
 RUN echo "deb https://artifacts.elastic.co/packages/5.x/apt stable main" | tee -a /etc/apt/sources.list.d/elastic-5.x.list
@@ -85,6 +79,11 @@ COPY configs/logstash/* /etc/logstash/conf.d/
 COPY configs/alerts.zip /opt/alerts.zip
 RUN unzip -d /opt/elastalert /opt/alerts.zip
 RUN rm /opt/alerts.zip
+
+#etcKeeper
+COPY configs/etckeeper.sh /root
+COPY configs/etckeeper-hook.sh /root/etckeeper
+RUN /root/etckeeper.sh
 
 #open ports
 EXPOSE 80 5044
