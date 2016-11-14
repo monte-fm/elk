@@ -60,8 +60,8 @@ RUN mkdir -p /usr/share/elasticsearch/config
 COPY configs/elasticsearch/elasticsearch.yml /usr/share/elasticsearch/config
 COPY configs/elasticsearch/logging.yml /usr/share/elasticsearch/config
 RUN service elasticsearch start && cd ~ \
-    curl -O https://gist.githubusercontent.com/thisismitch/3429023e8438cc25b86c/raw/d8c479e2a1adcea8b1fe86570e42abab0f10f364/filebeat-index-template.json \
-    curl -XPUT 'http://localhost:9200/_template/filebeat?pretty' -d@filebeat-index-template.json
+    && curl -O https://gist.githubusercontent.com/thisismitch/3429023e8438cc25b86c/raw/d8c479e2a1adcea8b1fe86570e42abab0f10f364/filebeat-index-template.json \
+    && curl -XPUT 'http://localhost:9200/_template/filebeat?pretty' -d@filebeat-index-template.json
 
 #Install Kibana
 RUN apt-get update
@@ -71,8 +71,8 @@ RUN service kibana start
 RUN htpasswd -b -c /etc/nginx/htpasswd.users admin admin
 RUN cd ~ && \
     curl -L -O http://download.elastic.co/beats/dashboards/beats-dashboards-1.3.1.zip \
-    unzip beats-dashboards-*.zip \
-    rm beats-dashboards-*.zip
+    && unzip beats-dashboards-*.zip \
+    && rm beats-dashboards-*.zip
 
 #Generate SSL Certificates
 RUN mkdir -p /etc/pki/tls
