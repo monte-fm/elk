@@ -7,8 +7,9 @@ RUN apt-get install -y software-properties-common python-software-properties \
     git git-core vim nano mc nginx tmux curl unzip zip wget \
     python-dev python-setuptools postfix \
     apache2-utils tmux apt-transport-https supervisor
-RUN easy_install pip
+COPY configs/supervisor/*.conf /etc/supervisor/conf.d/
 COPY configs/nginx/default /etc/nginx/sites-available/default
+RUN easy_install pip
 RUN echo "postfix postfix/mailname string elk.hostname.com" | debconf-set-selections
 RUN echo "postfix postfix/main_mailer_type string 'ELK'" | debconf-set-selections
 
@@ -77,7 +78,6 @@ RUN echo 'deb http://packages.elastic.co/logstash/2.2/debian stable main' | sudo
 RUN apt-get update
 RUN apt-get install logstash -y
 COPY configs/logstash/* /etc/logstash/conf.d/
-COPY configs/supervisor/*.conf /etc/supervisor/conf.d/
 
 # Instal ElasticAlert
 COPY configs/alerts.zip /opt/alerts.zip
