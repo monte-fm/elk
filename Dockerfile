@@ -4,13 +4,13 @@ MAINTAINER Olexander Kutsenko <olexander.kutsenko@gmail.com>
 #install
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y software-properties-common python-software-properties
-RUN apt-get install -y python-dev python-setuptools
+RUN apt-get install -y python-dev python-setuptools postfix
 RUN easy_install pip
 RUN apt-get install -y git git-core vim nano mc nginx tmux curl unzip zip wget
+COPY configs/nginx/default /etc/nginx/sites-available/default
 RUN apt-get install -y apache2-utils tmux apt-transport-https
 RUN echo "postfix postfix/mailname string magento.hostname.com" | sudo debconf-set-selections
 RUN echo "postfix postfix/main_mailer_type string 'Magento E-commerce'" | sudo debconf-set-selections
-RUN apt-get install -y supervisor postfix
 
 #Install Java 8
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys EEA14886
@@ -22,14 +22,6 @@ RUN apt-get install -y oracle-java8-installer
 RUN apt-get install -y oracle-java8-set-default
 RUN echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" | sudo tee -a /etc/environment
 RUN export JAVA_HOME=/usr/lib/jvm/java-8-oracle
-
-#Install PHP
-#RUN apt-get install -y wget php5 php5-fpm php5-cli php5-common php5-intl
-#RUN apt-get install -y php5-json php5-mysql php5-gd php5-imagick
-#RUN apt-get install -y php5-curl php5-mcrypt php5-dev php5-xdebug
-#RUN rm /etc/php5/fpm/php.ini
-#COPY configs/php.ini /etc/php5/fpm/php.ini
-#COPY configs/nginx/default /etc/nginx/sites-available/default
 
 # SSH service
 RUN apt-get install -y openssh-server openssh-client
@@ -57,13 +49,9 @@ COPY configs/etckeeper.sh /root
 COPY configs/etckeeper-hook.sh /root/etckeeper
 RUN /root/etckeeper.sh
 
-
-
 #Install Elasticsearch
 RUN wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
-#RUN wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 RUN echo "deb https://artifacts.elastic.co/packages/5.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-5.x.list
-#RUN echo "deb http://packages.elastic.co/elasticsearch/2.x/debian stable main" | sudo tee -a /etc/apt/sources.list.d/elasticsearch-2.x.list
 RUN apt-get update
 RUN apt-get -y install elasticsearch
 RUN echo "network.host: localhost" | sudo tee -a /etc/elasticsearch/elasticsearch.yml
@@ -71,15 +59,20 @@ RUN echo "MAX_MAP_COUNT=" | sudo tee -a /etc/default/elasticsearch
 RUN mkdir -p /usr/share/elasticsearch/config
 COPY configs/elasticsearch/elasticsearch.yml /usr/share/elasticsearch/config
 COPY configs/elasticsearch/logging.yml /usr/share/elasticsearch/config
+RUN service elasticsearch start && cd ~ \
+    curl -O https://gist.githubusercontent.com/thisismitch/3429023e8438cc25b86c/raw/d8c479e2a1adcea8b1fe86570e42abab0f10f364/filebeat-index-template.json \
+    curl -XPUT 'http://localhost:9200/_template/filebeat?pretty' -d@filebeat-index-template.json
 
 #Install Kibana
-#RUN echo "deb http://packages.elastic.co/kibana/4.4/debian stable main" | sudo tee -a /etc/apt/sources.list.d/kibana-4.4.x.list
 RUN apt-get update
 RUN apt-get -y install kibana
 RUN echo 'server.host: localhost' | sudo tee -a /etc/kibana/kibana.yml
 RUN service kibana start
 RUN htpasswd -b -c /etc/nginx/htpasswd.users admin admin
-RUN service nginx restart
+RUN cd ~ && \
+    curl -L -O http://download.elastic.co/beats/dashboards/beats-dashboards-1.3.1.zip \
+    unzip beats-dashboards-*.zip \
+    rm beats-dashboards-*.zip
 
 #Generate SSL Certificates
 RUN mkdir -p /etc/pki/tls
