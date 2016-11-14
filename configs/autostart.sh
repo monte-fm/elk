@@ -1,9 +1,12 @@
 #!/bin/bash
 service logstash configtest
-service php5-fpm start
+service kibana start
+service logstash start
+service elasticsearch start
+#service php5-fpm start
 service nginx start
-service ssh start
-service supervisor start
+#service ssh start
+#service supervisor start
 
 #Load Filebeat Index Template in Elasticsearch
 cd ~
@@ -12,7 +15,7 @@ curl -XPUT 'http://localhost:9200/_template/filebeat?pretty' -d@filebeat-index-t
 
 #Load Kibana Dashboards
 cd ~
-curl -L -O https://download.elastic.co/beats/dashboards/beats-dashboards-1.1.0.zip
+curl -L -O http://download.elastic.co/beats/dashboards/beats-dashboards-1.3.1.zip
 unzip beats-dashboards-*.zip
 cd beats-dashboards-* && ./load.sh
 
@@ -22,9 +25,12 @@ pip install -r /opt/elastalert/requirements.txt
 
 echo "
 #!/bin/bash
-service supervisor start
-service php5-fpm start
+#service supervisor start
+#service php5-fpm start
 service nginx start
-service ssh start
+#service ssh start
 service postfix start
+service kibana start
+service logstash start
+service elasticsearch start
 " > /root/autostart.sh
