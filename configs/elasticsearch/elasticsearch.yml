@@ -1,4 +1,4 @@
-network.host: 0.0.0.0
+network.host: localhost
 cluster.name: elk
 node.name: "elk"
 
