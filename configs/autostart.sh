@@ -16,7 +16,7 @@ curl -L -O http://download.elastic.co/beats/dashboards/beats-dashboards-1.3.1.zi
 unzip beats-dashboards-*.zip
 rm beats-dashboards-*.zip
 cd ~/beats-dashboards-*
-load.sh
+./load.sh
 
 pip install --upgrade pip
 pip install -r /opt/elastalert/requirements-dev.txt
