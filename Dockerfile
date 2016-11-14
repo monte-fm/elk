@@ -6,7 +6,7 @@ RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y software-properties-common python-software-properties \
     git git-core vim nano mc nginx tmux curl unzip zip wget \
     python-dev python-setuptools postfix \
-    apache2-utils tmux apt-transport-https
+    apache2-utils tmux apt-transport-https supervisor
 RUN easy_install pip
 COPY configs/nginx/default /etc/nginx/sites-available/default
 RUN echo "postfix postfix/mailname string elk.hostname.com" | debconf-set-selections
@@ -64,8 +64,6 @@ COPY configs/elasticsearch/logging.yml /usr/share/elasticsearch/config
 #Install Kibana
 RUN apt-get update
 RUN apt-get -y install kibana
-RUN echo 'server.host: localhost' | sudo tee -a /etc/kibana/kibana.yml
-RUN service kibana start
 RUN htpasswd -b -c /etc/nginx/htpasswd.users admin admin
 
 #Generate SSL Certificates
