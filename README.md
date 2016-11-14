@@ -1,15 +1,15 @@
-#Create container
+# Create container
 ```
-docker run -i -t -d --name=elk -h=elk -p 5001:80 -p 5002:22 -p 5044:5044 cristo/elk /bin/bash
+docker run -i -t -d --name=elk -h=elk -p 5001:80 -p 5044:5044 cristo/elk /bin/bash
 ```
 
-#SSH
+# SSH
 ```
 ssh -p5002 root@localhost
 password: root
 ```
 
-#NGINX server config file for communicate with docker
+# NGINX server config file for communicate with docker
 ```
 server {
         listen *:80;
@@ -40,7 +40,7 @@ Added etcKeeper - autocommit on exit to /etc git local repository
 [Filebeat] (https://www.digitalocean.com/community/tutorials/how-to-install-elasticsearch-logstash-and-kibana-elk-stack-on-ubuntu-14-04)
 
 
-#Origin
+# Origin
 [Docker Hub] (https://registry.hub.docker.com/u/cristo/symfony2/)
 
 [Git Hub] (https://github.com/monte-fm/symfony2)

@@ -6,7 +6,7 @@ RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y software-properties-common python-software-properties
 RUN apt-get install -y python-dev python-setuptools
 RUN easy_install pip
-RUN apt-get install -y git git-core vim nano mc nginx screen curl unzip zip wget
+RUN apt-get install -y git git-core vim nano mc nginx tmux curl unzip zip wget
 RUN apt-get install -y apache2-utils tmux apt-transport-https
 RUN echo "postfix postfix/mailname string magento.hostname.com" | sudo debconf-set-selections
 RUN echo "postfix postfix/main_mailer_type string 'Magento E-commerce'" | sudo debconf-set-selections
@@ -24,12 +24,12 @@ RUN echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" | sudo tee -a /etc/environment
 RUN export JAVA_HOME=/usr/lib/jvm/java-8-oracle
 
 #Install PHP
-RUN apt-get install -y wget php5 php5-fpm php5-cli php5-common php5-intl
-RUN apt-get install -y php5-json php5-mysql php5-gd php5-imagick
-RUN apt-get install -y php5-curl php5-mcrypt php5-dev php5-xdebug
-RUN rm /etc/php5/fpm/php.ini
-COPY configs/php.ini /etc/php5/fpm/php.ini
-COPY configs/nginx/default /etc/nginx/sites-available/default
+#RUN apt-get install -y wget php5 php5-fpm php5-cli php5-common php5-intl
+#RUN apt-get install -y php5-json php5-mysql php5-gd php5-imagick
+#RUN apt-get install -y php5-curl php5-mcrypt php5-dev php5-xdebug
+#RUN rm /etc/php5/fpm/php.ini
+#COPY configs/php.ini /etc/php5/fpm/php.ini
+#COPY configs/nginx/default /etc/nginx/sites-available/default
 
 # SSH service
 RUN apt-get install -y openssh-server openssh-client
@@ -57,9 +57,13 @@ COPY configs/etckeeper.sh /root
 COPY configs/etckeeper-hook.sh /root/etckeeper
 RUN /root/etckeeper.sh
 
+
+
 #Install Elasticsearch
-RUN wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
-RUN echo "deb http://packages.elastic.co/elasticsearch/2.x/debian stable main" | sudo tee -a /etc/apt/sources.list.d/elasticsearch-2.x.list
+RUN wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+#RUN wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+RUN echo "deb https://artifacts.elastic.co/packages/5.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-5.x.list
+#RUN echo "deb http://packages.elastic.co/elasticsearch/2.x/debian stable main" | sudo tee -a /etc/apt/sources.list.d/elasticsearch-2.x.list
 RUN apt-get update
 RUN apt-get -y install elasticsearch
 RUN echo "network.host: localhost" | sudo tee -a /etc/elasticsearch/elasticsearch.yml
@@ -69,7 +73,7 @@ COPY configs/elasticsearch/elasticsearch.yml /usr/share/elasticsearch/config
 COPY configs/elasticsearch/logging.yml /usr/share/elasticsearch/config
 
 #Install Kibana
-RUN echo "deb http://packages.elastic.co/kibana/4.4/debian stable main" | sudo tee -a /etc/apt/sources.list.d/kibana-4.4.x.list
+#RUN echo "deb http://packages.elastic.co/kibana/4.4/debian stable main" | sudo tee -a /etc/apt/sources.list.d/kibana-4.4.x.list
 RUN apt-get update
 RUN apt-get -y install kibana
 RUN echo 'server.host: localhost' | sudo tee -a /opt/kibana/config/kibana.yml
@@ -89,8 +93,6 @@ RUN locale-gen en_US.UTF-8
 RUN dpkg-reconfigure locales
 
 #Install Logstash
-RUN echo 'deb http://packages.elastic.co/logstash/2.2/debian stable main' | sudo tee /etc/apt/sources.list.d/logstash-2.2.x.list
-RUN apt-get update
 RUN apt-get install logstash -y
 COPY configs/logstash/* /etc/logstash/conf.d/
 COPY configs/supervisor/*.conf /etc/supervisor/conf.d/
@@ -101,4 +103,4 @@ RUN unzip -d /opt/elastalert /opt/alerts.zip
 RUN rm /opt/alerts.zip
 
 #open ports
-EXPOSE 80 22 5044
+EXPOSE 80 5044
