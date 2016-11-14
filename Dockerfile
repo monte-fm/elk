@@ -55,58 +55,28 @@ RUN chmod +x /root/autostart.sh
 RUN echo "force_color_prompt=yes" >> ~/.bashrc
 RUN echo "export PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u\[\033[01;33m\]@\[\033[01;36m\]\h \[\033[01;33m\]\w \[\033[01;35m\]\$ \[\033[00m\]'" >> .bashrc
 
-
-
-
-## Install Elasticsearch
-#RUN wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add -
-#RUN echo "deb https://artifacts.elastic.co/packages/5.x/apt stable main" | tee -a /etc/apt/sources.list.d/elastic-5.x.list
-#RUN apt-get update
-#RUN apt-get -y install elasticsearch
-#RUN echo "network.host: localhost" | tee -a /etc/elasticsearch/elasticsearch.yml
-#RUN echo "MAX_MAP_COUNT=" | tee -a /etc/default/elasticsearch
-#RUN mkdir -p /usr/share/elasticsearch/config
-#COPY configs/elasticsearch/elasticsearch.yml /usr/share/elasticsearch/config
-#COPY configs/elasticsearch/logging.yml /usr/share/elasticsearch/config
-
-## Install Kibana
-#RUN apt-get update
-#RUN apt-get -y install kibana
-#RUN htpasswd -b -c /etc/nginx/htpasswd.users admin admin
-
-## Install Logstash
-#RUN rm /etc/apt/sources.list.d/*
-#RUN wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | apt-key add -
-#RUN echo 'deb http://packages.elastic.co/logstash/2.2/debian stable main' | tee /etc/apt/sources.list.d/logstash-2.2.x.list
-#RUN apt-get update
-#RUN apt-get install logstash -y
-#COPY configs/logstash/* /etc/logstash/conf.d/
-
-
-
-
 #Install Elasticsearch
-RUN wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
-RUN echo "deb http://packages.elastic.co/elasticsearch/2.x/debian stable main" | sudo tee -a /etc/apt/sources.list.d/elasticsearch-2.x.list
+RUN wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | apt-key add -
+RUN echo "deb http://packages.elastic.co/elasticsearch/2.x/debian stable main" | tee -a /etc/apt/sources.list.d/elasticsearch-2.x.list
 RUN apt-get update
 RUN apt-get -y install elasticsearch
-RUN echo "network.host: localhost" | sudo tee -a /etc/elasticsearch/elasticsearch.yml
-RUN echo "MAX_MAP_COUNT=" | sudo tee -a /etc/default/elasticsearch
+RUN echo "network.host: localhost" | tee -a /etc/elasticsearch/elasticsearch.yml
+RUN echo "MAX_MAP_COUNT=" | tee -a /etc/default/elasticsearch
 RUN mkdir -p /usr/share/elasticsearch/config
 COPY configs/elasticsearch/elasticsearch.yml /usr/share/elasticsearch/config
 COPY configs/elasticsearch/logging.yml /usr/share/elasticsearch/config
 
 #Install Kibana
-RUN echo "deb http://packages.elastic.co/kibana/4.4/debian stable main" | sudo tee -a /etc/apt/sources.list.d/kibana-4.4.x.list
+RUN echo "deb http://packages.elastic.co/kibana/4.6/debian stable main" | tee -a /etc/apt/sources.list.d/kibana-4.x.list
 RUN apt-get update
 RUN apt-get -y install kibana
-RUN echo 'server.host: localhost' | sudo tee -a /opt/kibana/config/kibana.yml
+RUN echo 'server.host: localhost' | tee -a /opt/kibana/config/kibana.yml
 RUN service kibana start
 RUN htpasswd -b -c /etc/nginx/htpasswd.users admin admin
 RUN service nginx restart
 
 #Install Logstash
-RUN echo 'deb http://packages.elastic.co/logstash/2.2/debian stable main' | sudo tee /etc/apt/sources.list.d/logstash-2.2.x.list
+RUN echo 'deb http://packages.elastic.co/logstash/2.2/debian stable main' | tee /etc/apt/sources.list.d/logstash-2.2.x.list
 RUN apt-get update
 RUN apt-get install logstash -y
 COPY configs/logstash/* /etc/logstash/conf.d/
