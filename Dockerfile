@@ -63,8 +63,8 @@ RUN apt-get -y install elasticsearch
 RUN echo "network.host: localhost" | tee -a /etc/elasticsearch/elasticsearch.yml
 RUN echo "MAX_MAP_COUNT=" | tee -a /etc/default/elasticsearch
 RUN mkdir -p /usr/share/elasticsearch/config
-COPY configs/elasticsearch/elasticsearch.yml /etc/elasticsearch/
-COPY configs/elasticsearch/logging.yml /etc/elasticsearch/
+COPY configs/elasticsearch/elasticsearch.yml /usr/share/elasticsearch/config
+COPY configs/elasticsearch/logging.yml /usr/share/elasticsearch/config
 
 # Install Kibana
 RUN apt-get -y install kibana
