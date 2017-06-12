@@ -1,4 +1,4 @@
-# Create container
+# Create container from image
 ```
 docker run -i -t -d --name=elk -h=elk -p 5001:80 -p 5044:5044 cristo/elk /bin/bash
 ```
